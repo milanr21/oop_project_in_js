@@ -138,17 +138,70 @@ class Workout {
   }
 }
 
-const tracker = new CalorieTracker();
+class App {
+  constructor() {
+    this._tracker = new CalorieTracker();
 
-const breakfast = new Meal('chicken', 1100);
+    document
+      .getElementById('meal-form')
+      .addEventListener('submit', this._newMeal.bind(this));
 
-tracker.addMeal(breakfast);
+    document
+      .getElementById('workout-form')
+      .addEventListener('submit', this._newWorkout.bind(this));
+  }
 
-const running = new Workout('morning running', 500);
+  _newMeal(e) {
+    e.preventDefault();
 
-tracker.addWorkout(running);
+    const mealName = document.getElementById('meal-name');
 
-console.log(tracker._meals);
-console.log(tracker._workouts);
+    const mealCalories = document.getElementById('meal-calories');
 
-console.log(tracker._totalCalories);
+    if (mealName === '' || mealCalories === '') {
+      alert('please Fill up the meal form');
+      return;
+    }
+
+    const meal = new Meal(mealName.value, Number(mealCalories.value));
+
+    this._tracker.addMeal(meal);
+
+    mealName.value = '';
+    mealCalories.value = '';
+
+    const collapseMeal = document.getElementById('collapse-meal');
+
+    const bsCollapse = new bootstrap.Collapse(collapseMeal, {
+      toggle: true,
+    });
+  }
+
+  _newWorkout(e) {
+    e.preventDefault();
+
+    const workoutName = document.getElementById('workout-name');
+    const workoutCalories = document.getElementById('workout-calories');
+
+    if (workoutName === '' || workoutCalories === '') {
+      alert('Please Fill up the workout form');
+      return;
+    }
+
+    const workout = new Workout(workoutName, Number(workoutCalories.value));
+
+    this._tracker.addWorkout(workout);
+
+    workoutName.value = '';
+    workoutCalories.value = '';
+
+    const collapseWorkout = document.getElementById('collapse-workout');
+
+    const bsCollapse = new bootstrap.Collapse(collapseWorkout, {
+      toggle: true,
+    });
+  }
+}
+
+// It is the instance of the App class, It Initializes the application and sets up the event listeners for the form Submission
+const app = new App();
