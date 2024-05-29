@@ -53,6 +53,13 @@ class CalorieTracker {
     }
   }
 
+  reset() {
+    this._totalCalories = 0;
+    this._meals = [];
+    this._workouts = [];
+    this._render();
+  }
+
   // function to display the total calories
 
   _displayTotalCalories() {
@@ -237,6 +244,18 @@ class App {
     document
       .getElementById('workout-items')
       .addEventListener('click', this._removeItem.bind(this, 'workout'));
+
+    document
+      .getElementById('filter-meals')
+      .addEventListener('keyup', this._filterItems.bind(this, 'meal'));
+
+    document
+      .getElementById('filter-workouts')
+      .addEventListener('keyup', this._filterItems.bind(this, 'workout'));
+
+    document
+      .getElementById('reset')
+      .addEventListener('click', this._reset.bind(this));
   }
 
   _newItem(type, e) {
@@ -285,6 +304,34 @@ class App {
         e.target.closest('.card').remove();
       }
     }
+  }
+
+  _filterItems(type, e) {
+    const text = e.target.value.toLowerCase();
+
+    document.querySelectorAll(`#${type}-items .card`).forEach((item) => {
+      const nameElement = item.querySelector('.card-body h4'); // Select the element more specifically
+      if (nameElement) {
+        // Ensure nameElement is not null
+        const name = nameElement.textContent;
+        console.log(name);
+        if (name.toLowerCase().indexOf(text) !== -1) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      } else {
+        console.warn('Name element not found in:', item);
+      }
+    });
+  }
+
+  _reset() {
+    this._tracker.reset();
+    document.getElementById('meal-items').innerHTML = '';
+    document.getElementById('workout-items').innerHTML = '';
+    document.getElementById('filter-meals').innerHTML = '';
+    document.getElementById('filter-workouts').innerHTML = '';
   }
 }
 
