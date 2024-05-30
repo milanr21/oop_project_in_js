@@ -11,6 +11,8 @@ class CalorieTracker {
     this._displayCaloriesLimit();
     this._displayCaloriesRemaining();
     this._displayCaloriesProgress();
+
+    document.getElementById('limit').value = this._calorieLimit;
   }
 
   // Function to add and meal and update the total calories
@@ -66,6 +68,7 @@ class CalorieTracker {
     this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
+    Storage.clearStorage();
     this._render();
   }
 
@@ -332,6 +335,10 @@ class Storage {
     workouts.push(workout);
 
     localStorage.setItem('workouts', JSON.stringify(workouts));
+  }
+
+  static clearStorage() {
+    localStorage.clear();
   }
 }
 
